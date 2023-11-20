@@ -9,9 +9,9 @@ Typical usage example:
 
     or configured by code within your service:
     configure_opentelemetry(
-        HoneycombOptions(
+        BaselimeOptions(
             debug=True,
-            apikey=os.getenv("HONEYCOMB_API_KEY"),
+            apikey=os.getenv("BASELIME_API_KEY"),
             service_name="otel-python-example"
         )
     )
@@ -62,7 +62,7 @@ class BaselimeDistro(BaseDistro):
     declaration to package metadata in our pyproject.toml, like so:
 
     [tool.poetry.plugins."opentelemetry_distro"]
-    distro = "honeycomb.opentelemetry.distro:HoneycombDistro"
+    distro = "baselime.opentelemetry.distro:BaselimeDistro"
     """
 
     def _configure(self, **kwargs):

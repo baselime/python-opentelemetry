@@ -1,7 +1,6 @@
 import logging
 import os
 from opentelemetry.sdk.environment_variables import (
-    OTEL_EXPORTER_OTLP_ENDPOINT,
     OTEL_LOG_LEVEL,
     OTEL_SERVICE_NAME
 )
@@ -13,7 +12,7 @@ SAMPLE_RATE = "SAMPLE_RATE"
 BASELIME_API_KEY = "BASELIME_API_KEY"
 BASELIME_URL = "BASELIME_URL"
 # Default values
-DEFAULT_API_ENDPOINT = "https://otel.baselime.cc/v1"
+DEFAULT_API_ENDPOINT = "https://otel.baselime.io/v1"
 DEFAULT_SERVICE_NAME = "unknown_service:python"
 DEFAULT_LOG_LEVEL = "ERROR"
 
