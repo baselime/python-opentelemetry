@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "baselime-opentelemetry"
+version = "0.1.0"
+description = ""
+authors = ["Ankcorn <thomasankcorn@gmail.com>"]
+readme = "README.md"
+packages = [{include = "baselime", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.7, >= 3.7.2"
+opentelemetry-api = "^1.21.0"
+opentelemetry-sdk = "^1.21.0"
+opentelemetry-exporter-otlp = "^1.21.0"
+opentelemetry-instrumentation = "^0.42b0"
+
+[tool.poetry.plugins."opentelemetry_distro"]
+distro = "baselime.opentelemetry.distro:BaselimeDistro"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
