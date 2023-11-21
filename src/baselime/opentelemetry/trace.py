@@ -43,7 +43,7 @@ def create_tracer_provider(
     )
 
     trace_provider.add_span_processor(
-        BatchSpanProcessor(
+        SimpleSpanProcessor(
             exporter
         )
     )
