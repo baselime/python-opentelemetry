@@ -36,13 +36,10 @@ def create_tracer_provider(
     trace_provider = TracerProvider(
         resource=resource,
     )
-    trace_provider.add_span_processor(
-        BaggageSpanProcessor()
-    )
 
     trace_provider.add_span_processor(
         BatchSpanProcessor(
-            span_exporter=exporter
+            exporter
         )
     )
     if options.debug:
