@@ -2,6 +2,7 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import (
     SimpleSpanProcessor,
+    BatchSpanProcessor,
     ConsoleSpanExporter
 )
 
@@ -40,7 +41,7 @@ def create_tracer_provider(
     )
 
     trace_provider.add_span_processor(
-        SimpleSpanProcessor(
+        BatchSpanProcessor(
             exporter
         )
     )
