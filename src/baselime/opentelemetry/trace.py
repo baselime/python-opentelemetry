@@ -42,7 +42,7 @@ def create_tracer_provider(
             exporter
         )
     )
-    if options.debug:
+    if options.export_console:
         trace_provider.add_span_processor(
             SimpleSpanProcessor(
                 ConsoleSpanExporter()

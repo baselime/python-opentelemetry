@@ -8,6 +8,7 @@ from opentelemetry.sdk.environment_variables import (
 # Environment Variable Names
 OTEL_SERVICE_VERSION = "OTEL_SERVICE_VERSION"
 DEBUG = "DEBUG"
+EXPORT_CONSOLE = "EXPORT_CONSOLE"
 SAMPLE_RATE = "SAMPLE_RATE"
 BASELIME_API_KEY = "BASELIME_API_KEY"
 BASELIME_URL = "BASELIME_URL"
@@ -85,7 +86,7 @@ class BaselimeOptions:
     endpoint = DEFAULT_API_ENDPOINT
     debug = False
     log_level = DEFAULT_LOG_LEVEL
-
+    export_console = False
     def __init__(
         self,
         apikey: str = None,
@@ -108,6 +109,8 @@ class BaselimeOptions:
                 self.log_level = log_level.upper()
         logging.basicConfig(level=log_levels[self.log_level])
 
+        self.export_console = os.environ.get(EXPORT_CONSOLE, False)
+        
         self.api_key = os.environ.get(
             BASELIME_API_KEY,
             os.environ.get(
