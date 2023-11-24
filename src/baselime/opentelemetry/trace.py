@@ -31,7 +31,7 @@ def create_tracer_provider(
 
     exporter = HTTPSpanExporter(
         endpoint=options.get_traces_endpoint(),
-        headers=options.get_trace_headers()
+        headers=options.get_trace_headers(),
     )
     trace_provider = TracerProvider(
         resource=resource,
