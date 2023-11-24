@@ -110,7 +110,7 @@ def _default_event_context_extractor(lambda_event: Any) -> Context:
     """Extracts an OTel Context from the Lambda Event."""
 
     if "Records" in lambda_event:
-        if lambda_event["Records"][0]["eventSource"] == "aws:sns":
+        if lambda_event["Records"][0]["EventSource"] == "aws:sns":
             return _extract_sns_context(lambda_event)
         else:
             return get_global_textmap().extract({})
@@ -275,7 +275,7 @@ def _instrument(
 
         span_kind = None
         try:
-            if lambda_event["Records"][0]["eventSource"] in {
+            if lambda_event["Records"][0]["EventSource"] in {
                 "aws:sqs",
                 "aws:s3",
                 "aws:sns",
