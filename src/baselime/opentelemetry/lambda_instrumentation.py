@@ -108,23 +108,17 @@ def _extract_sns_context(lambda_event: Any) -> Context:
 
 def _default_event_context_extractor(lambda_event: Any) -> Context:
     """Extracts an OTel Context from the Lambda Event."""
-
-    if "Records" in lambda_event:
-        if lambda_event["Records"][0]["EventSource"] == "aws:sns":
-            return _extract_sns_context(lambda_event)
+    try:
+        if "Records" in lambda_event:
+            if lambda_event["Records"][0]["EventSource"] == "aws:sns":
+                return _extract_sns_context(lambda_event)
+            else:
+                return get_global_textmap().extract({})
         else:
-            return get_global_textmap().extract({})
-    else:
-        headers = None
-        try:
             headers = lambda_event["headers"]
-        except (TypeError, KeyError):
-            logger.debug(
-                "Extracting context from Lambda Event failed: either enable X-Ray active tracing or configure API Gateway to trigger this Lambda function as a pure proxy. Otherwise, generated spans will have an invalid (empty) parent context."
-            )
-        if not isinstance(headers, dict):
-            headers = {}
-        return get_global_textmap().extract(headers)
+            return get_global_textmap().extract(headers)
+    except:
+        return get_global_textmap().extract({})
 
 
 def _determine_parent_context(
