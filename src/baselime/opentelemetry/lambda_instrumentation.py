@@ -103,8 +103,8 @@ OTEL_INSTRUMENTATION_AWS_LAMBDA_FLUSH_TIMEOUT = (
 
 def _extract_sns_context(lambda_event: Any) -> Context:
     """Extracts an OTel Context from an SNS Lambda Event."""
-    headers = lambda_event["Records"][0]["Sns"]["MessageAttributes"]
-    return get_global_textmap().extract(headers)
+    trace_parent = lambda_event["Records"][0]["Sns"]["MessageAttributes"]['traceparent']['Value']
+    return get_global_textmap().extract({ 'traceparent': trace_parent })
 
 def _default_event_context_extractor(lambda_event: Any) -> Context:
     """Extracts an OTel Context from the Lambda Event."""
@@ -117,7 +117,8 @@ def _default_event_context_extractor(lambda_event: Any) -> Context:
         else:
             headers = lambda_event["headers"]
             return get_global_textmap().extract(headers)
-    except:
+    except Exception as e:
+        logger.error("Failed to extract context from Lambda Event: %s", e)
         return get_global_textmap().extract({})
 
 
