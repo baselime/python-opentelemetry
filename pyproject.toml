@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "baselime-opentelemetry"
-version = "0.2.1"
+version = "0.2.2"
 description = ""
 authors = ["Ankcorn <thomasankcorn@gmail.com>"]
 readme = "README.md"

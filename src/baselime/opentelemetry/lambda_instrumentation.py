@@ -118,7 +118,7 @@ def _default_event_context_extractor(lambda_event: Any) -> Context:
             headers = lambda_event["headers"]
             return get_global_textmap().extract(headers)
     except Exception as e:
-        logger.error("Failed to extract context from Lambda Event: %s", e)
+        logger.warn("Failed to extract context from Lambda Event: %s", e)
         return get_global_textmap().extract({})
 
 
