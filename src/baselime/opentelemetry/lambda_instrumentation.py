@@ -316,7 +316,7 @@ def _instrument(
                     lambda_context.aws_request_id,
                 )
 
-                span.set_attributes(FlatterDict(lambda_event, '.'))
+                span.set_attributes(FlatterDict({ "event": lambda_event}, '.'))
 
             result = call_wrapped(*args, **kwargs)
 
