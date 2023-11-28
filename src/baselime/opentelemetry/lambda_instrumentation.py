@@ -71,6 +71,7 @@ import os
 from importlib import import_module
 from typing import Any, Callable, Collection
 from urllib.parse import urlencode
+from flatdict import FlatterDict
 
 from wrapt import wrap_function_wrapper
 
@@ -118,7 +119,6 @@ def _default_event_context_extractor(lambda_event: Any) -> Context:
             headers = lambda_event["headers"]
             return get_global_textmap().extract(headers)
     except Exception as e:
-        logger.warn("Failed to extract context from Lambda Event: %s", e)
         return get_global_textmap().extract({})
 
 
@@ -315,6 +315,8 @@ def _instrument(
                     SpanAttributes.FAAS_EXECUTION,
                     lambda_context.aws_request_id,
                 )
+
+                span.set_attributes(FlatterDict(lambda_event, '.'))
 
             result = call_wrapped(*args, **kwargs)
 
