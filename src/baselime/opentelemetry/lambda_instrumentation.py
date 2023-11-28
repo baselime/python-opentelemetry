@@ -94,8 +94,6 @@ from opentelemetry.trace import (
 )
 from opentelemetry.trace.propagation import get_current_span
 
-logger = logging.getLogger(__name__)
-
 _HANDLER = "_HANDLER"
 ORIG_HANDLER = "ORIG_HANDLER"
 OTEL_INSTRUMENTATION_AWS_LAMBDA_FLUSH_TIMEOUT = (
@@ -345,9 +343,9 @@ def _instrument(
                 # NOTE: `force_flush` before function quit in case of Lambda freeze.
                 _tracer_provider.force_flush(flush_timeout)
             except Exception:  # pylint: disable=broad-except
-                logger.exception("TracerProvider failed to flush traces")
+                logging.error("TracerProvider failed to flush traces")
         else:
-            logger.warning(
+            logging.warning(
                 "TracerProvider was missing `force_flush` method. This is necessary in case of a Lambda freeze and would exist in the OTel SDK implementation."
             )
 
