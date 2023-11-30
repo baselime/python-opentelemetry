@@ -42,7 +42,7 @@ log_levels = {
     "CRITICAL": logging.CRITICAL,
 }
 
-_logger = logging.getLogger('baselime.opentelemetry.options')
+_logger = logging.getLogger(__name__)
 
 
 
@@ -85,7 +85,7 @@ class BaselimeOptions:
     service_name = DEFAULT_SERVICE_NAME
     endpoint = DEFAULT_API_ENDPOINT
     debug = False
-    log_level = DEFAULT_LOG_LEVEL
+    log_level = log_levels[DEFAULT_LOG_LEVEL]
     export_console = False
     def __init__(
         self,
@@ -102,12 +102,12 @@ class BaselimeOptions:
             INVALID_DEBUG_ERROR
         )
         if self.debug:
-            self.log_level = "DEBUG"
+            self.log_level = log_levels["DEBUG"]
         else:
             log_level = os.environ.get(OTEL_LOG_LEVEL, log_level)
             if log_level and log_level.upper() in log_levels:
-                self.log_level = log_level.upper()
-        logging.basicConfig(level=log_levels[self.log_level])
+                self.log_level = log_levels[self.log_level.upper()]
+        _logger.setLevel(level=self.log_level)
 
         self.export_console = os.environ.get(EXPORT_CONSOLE, False)
         

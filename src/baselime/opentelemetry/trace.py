@@ -11,8 +11,6 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
 )
 
 from baselime.opentelemetry.options import BaselimeOptions
-from baselime.opentelemetry.baggage import BaggageSpanProcessor
-
 
 def create_tracer_provider(
     options: BaselimeOptions,
