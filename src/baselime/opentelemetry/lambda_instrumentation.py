@@ -392,7 +392,7 @@ class AwsLambdaInstrumentor(BaseInstrumentor):
             if flush_timeout_env is not None:
                 flush_timeout = int(flush_timeout_env)
         except ValueError:
-            logger.warning(
+            logging.warning(
                 "Could not convert OTEL_INSTRUMENTATION_AWS_LAMBDA_FLUSH_TIMEOUT value %s to int",
                 flush_timeout_env,
             )

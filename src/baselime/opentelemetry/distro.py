@@ -25,7 +25,7 @@ from opentelemetry.instrumentation.distro import BaseDistro
 from opentelemetry.trace import set_tracer_provider
 
 from typing import Optional
-_logger = getLogger(__name__)
+_logger = getLogger('baselime.opentelemetry.distro')
 
 def configure_opentelemetry(
     options: Optional[BaselimeOptions] = None,

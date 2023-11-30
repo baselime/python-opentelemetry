@@ -42,7 +42,7 @@ log_levels = {
     "CRITICAL": logging.CRITICAL,
 }
 
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('baselime.opentelemetry.options')
 
 
 
