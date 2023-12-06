@@ -71,7 +71,7 @@ import os
 from importlib import import_module
 from typing import Any, Callable, Collection
 from urllib.parse import urlencode
-from baselime.opentelemetry.utils import flatten    
+from baselime.opentelemetry.utils import flat    
 
 from wrapt import wrap_function_wrapper
 
@@ -316,9 +316,12 @@ def _instrument(
 
             result = call_wrapped(*args, **kwargs)
 
-            span.set_attributes(flatten(lambda_event, 'event', '.'))
-            span.set_attributes(flatten(result, 'result', '.'))
-
+            try:
+                span.set_attributes(flat(lambda_event, 'event', '.'))
+                span.set_attributes(flat(result, 'result', '.'))
+            except Exception as e:
+                logging.warning("Failed to set attributes: %s", e)
+                
             # If the request came from an API Gateway, extract http attributes from the event
             # https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/instrumentation/aws-lambda.md#api-gateway
             # https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/http.md#http-server-semantic-conventions
