@@ -1,3 +1,4 @@
 from baselime.opentelemetry.distro import configure_opentelemetry
 from baselime.opentelemetry.options import BaselimeOptions
 from baselime.opentelemetry.lambda_instrumentation import AwsLambdaInstrumentor
+from baselime.opentelemetry.utils import flatten, sanitize_dict

@@ -71,7 +71,7 @@ import os
 from importlib import import_module
 from typing import Any, Callable, Collection
 from urllib.parse import urlencode
-from flatdict import FlatterDict
+from baselime.opentelemetry.utils import flatten    
 
 from wrapt import wrap_function_wrapper
 
@@ -314,9 +314,10 @@ def _instrument(
                     lambda_context.aws_request_id,
                 )
 
-                span.set_attributes(FlatterDict({ "event": lambda_event}, '.'))
-
             result = call_wrapped(*args, **kwargs)
+
+            span.set_attributes(flatten(lambda_event, 'event', '.'))
+            span.set_attributes(flatten(result, 'result', '.'))
 
             # If the request came from an API Gateway, extract http attributes from the event
             # https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/instrumentation/aws-lambda.md#api-gateway

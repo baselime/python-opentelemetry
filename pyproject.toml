@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "baselime-opentelemetry"
-version = "0.2.7"
+version = "0.2.8"
 description = ""
 authors = ["Ankcorn <thomasankcorn@gmail.com>"]
 readme = "README.md"
@@ -12,7 +12,6 @@ opentelemetry-api = "^1.21.0"
 opentelemetry-sdk = "^1.21.0"
 opentelemetry-exporter-otlp = "^1.21.0"
 opentelemetry-instrumentation = "^0.42b0"
-flatdict = "^4.0.1"
 
 [tool.poetry.plugins."opentelemetry_distro"]
 distro = "baselime.opentelemetry.distro:BaselimeDistro"
