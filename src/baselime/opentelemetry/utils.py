@@ -30,3 +30,7 @@ def flatten(dictionary, parent_key=False, separator='.'):
             items.append((new_key, value))
     return dict(items)
 
+def flat(dictionary, parent_key=False):
+    sanitized = sanitize_dict(dictionary)
+    flattened = flatten(sanitized, parent_key)
+    return flattened
