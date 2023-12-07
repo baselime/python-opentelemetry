@@ -315,47 +315,53 @@ def _instrument(
                     lambda_context.aws_request_id,
                 )
 
-            result = call_wrapped(*args, **kwargs)
-
             try:
-                span.set_attributes(flat(lambda_event, 'event'))
-                span.set_attributes(flat(result, 'result'))
-            except Exception as e:
-                logging.warning("Failed to set attributes: %s", e)
-                
-            # If the request came from an API Gateway, extract http attributes from the event
-            # https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/instrumentation/aws-lambda.md#api-gateway
-            # https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/http.md#http-server-semantic-conventions
-            if isinstance(lambda_event, dict) and lambda_event.get(
-                "requestContext"
-            ):
-                span.set_attribute(SpanAttributes.FAAS_TRIGGER, "http")
 
-                if lambda_event.get("version") == "2.0":
-                    _set_api_gateway_v2_proxy_attributes(lambda_event, span)
+                result = call_wrapped(*args, **kwargs)
+
+                try:
+                    span.set_attributes(flat(lambda_event, 'event'))
+                    span.set_attributes(flat(result, 'result'))
+                except Exception as e:
+                    logging.warning("Failed to set attributes: %s", e)
+                    
+                # If the request came from an API Gateway, extract http attributes from the event
+                # https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/instrumentation/aws-lambda.md#api-gateway
+                # https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/http.md#http-server-semantic-conventions
+                if isinstance(lambda_event, dict) and lambda_event.get(
+                    "requestContext"
+                ):
+                    span.set_attribute(SpanAttributes.FAAS_TRIGGER, "http")
+
+                    if lambda_event.get("version") == "2.0":
+                        _set_api_gateway_v2_proxy_attributes(lambda_event, span)
+                    else:
+                        _set_api_gateway_v1_proxy_attributes(lambda_event, span)
+
+                    if isinstance(result, dict) and result.get("statusCode"):
+                        span.set_attribute(
+                            SpanAttributes.HTTP_STATUS_CODE,
+                            result.get("statusCode"),
+                        )
+
+                return result
+            
+            except Exception as ex:  # pylint: disable=broad-except
+                span.record_exception(ex)
+                raise
+            finally:
+                _tracer_provider = tracer_provider or get_tracer_provider()
+                if hasattr(_tracer_provider, "force_flush"):
+                    try:
+                        # NOTE: `force_flush` before function quit in case of Lambda freeze.
+                        _tracer_provider.force_flush(flush_timeout)
+                    except Exception:  # pylint: disable=broad-except
+                        logging.error("TracerProvider failed to flush traces")
                 else:
-                    _set_api_gateway_v1_proxy_attributes(lambda_event, span)
-
-                if isinstance(result, dict) and result.get("statusCode"):
-                    span.set_attribute(
-                        SpanAttributes.HTTP_STATUS_CODE,
-                        result.get("statusCode"),
+                    logging.warning(
+                        "TracerProvider was missing `force_flush` method. This is necessary in case of a Lambda freeze and would exist in the OTel SDK implementation."
                     )
 
-        _tracer_provider = tracer_provider or get_tracer_provider()
-        if hasattr(_tracer_provider, "force_flush"):
-            try:
-                # NOTE: `force_flush` before function quit in case of Lambda freeze.
-                _tracer_provider.force_flush(flush_timeout)
-            except Exception:  # pylint: disable=broad-except
-                logging.error("TracerProvider failed to flush traces")
-        else:
-            logging.warning(
-                "TracerProvider was missing `force_flush` method. This is necessary in case of a Lambda freeze and would exist in the OTel SDK implementation."
-            )
-
-       
-        return result
 
     wrap_function_wrapper(
         wrapped_module_name,

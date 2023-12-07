@@ -36,5 +36,3 @@ def flat(dictionary, parent_key=False):
     sanitized = sanitize_dict(dictionary)
     flattened = flatten(sanitized, parent_key)
     return flattened
-
-print(flat(None))
