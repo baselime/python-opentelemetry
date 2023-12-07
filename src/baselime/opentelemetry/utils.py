@@ -31,6 +31,10 @@ def flatten(dictionary, parent_key=False, separator='.'):
     return dict(items)
 
 def flat(dictionary, parent_key=False):
+    if not dictionary:
+        return { parent_key: 'empty'}
     sanitized = sanitize_dict(dictionary)
     flattened = flatten(sanitized, parent_key)
     return flattened
+
+print(flat(None))

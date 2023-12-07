@@ -318,8 +318,8 @@ def _instrument(
             result = call_wrapped(*args, **kwargs)
 
             try:
-                span.set_attributes(flat(lambda_event, 'event', '.'))
-                span.set_attributes(flat(result, 'result', '.'))
+                span.set_attributes(flat(lambda_event, 'event'))
+                span.set_attributes(flat(result, 'result'))
             except Exception as e:
                 logging.warning("Failed to set attributes: %s", e)
                 
