@@ -76,8 +76,6 @@ from baselime.opentelemetry.utils import flat
 from wrapt import wrap_function_wrapper
 
 from opentelemetry.context.context import Context
-from opentelemetry.instrumentation.aws_lambda.package import _instruments
-from opentelemetry.instrumentation.aws_lambda.version import __version__
 from opentelemetry.instrumentation.instrumentor import BaseInstrumentor
 from opentelemetry.instrumentation.utils import unwrap
 
@@ -93,6 +91,9 @@ from opentelemetry.trace import (
     get_tracer_provider,
 )
 from opentelemetry.trace.propagation import get_current_span
+
+_instruments = tuple()
+__version__ = "0.42b0"
 
 _HANDLER = "_HANDLER"
 ORIG_HANDLER = "ORIG_HANDLER"
